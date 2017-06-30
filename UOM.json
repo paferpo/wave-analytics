@@ -137,29 +137,7 @@
                         "value": 264.172
                     }
                 ]
-            },
-            "forecasted_gp_wc_step": {
-                "groups": [],
-                "isFacet": true,
-                "label": "forecasted_gp_wc_step",
-                "numbers": [],
-                "query": "q = load \"dataset_year_in_date_format\";\nq = group q by 'all';\nq = foreach q generate (sum('{{cell(Master_Data_Selector.selection, 0, \"value\").asString()}}')) as '{{cell(Master_Data_Selector.selection, 0, \"display\").asString()}} ('$')';\nq = limit q 2000;",
-                "selectMode": "single",
-                "strings": [],
-                "type": "saql",
-                "useGlobal": true
-            },
-            "volume_calculation": {
-                "groups": [],
-                "isFacet": true,
-                "label": "volume_calculation",
-                "numbers": [],
-                "query": "q = load \"dataset_year_in_date_format\";\nq = group q by 'all';\nq = foreach q generate (sum('Volume') * {{cell(UOM_Selector.selection, 0, \"value\").asString()}}) as 'Volume ({{column(UOM_Selector.selection, [\"display\"]).asObject()}});\nq = limit q 2000;",
-                "selectMode": "single",
-                "strings": [],
-                "type": "saql",
-                "useGlobal": true
-            },
+            },            
             "Volume_1": {
                 "groups": [],
                 "isFacet": true,
