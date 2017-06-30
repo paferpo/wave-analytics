@@ -1,0 +1,352 @@
+{
+    "label": "UOM",
+    "state": {
+        "dataSourceLinks": [],
+        "gridLayouts": [
+            {
+                "name": "Default",
+                "numColumns": 12,
+                "pages": [
+                    {
+                        "widgets": [
+                            {
+                                "colspan": 3,
+                                "column": 0,
+                                "name": "listselector_1",
+                                "row": 5,
+                                "rowspan": 5,
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            },
+                            {
+                                "colspan": 3,
+                                "column": 0,
+                                "name": "listselector_2",
+                                "row": 0,
+                                "rowspan": 5,
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            },
+                            {
+                                "colspan": 3,
+                                "column": 3,
+                                "name": "chart_1",
+                                "row": 0,
+                                "rowspan": 5,
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            },
+                            {
+                                "colspan": 9,
+                                "column": 3,
+                                "name": "table_1",
+                                "row": 5,
+                                "rowspan": 5,
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "rowHeight": "normal",
+                "selectors": [],
+                "style": {
+                    "alignmentX": "left",
+                    "alignmentY": "top",
+                    "backgroundColor": "#F2F6FA",
+                    "cellSpacingX": 8,
+                    "cellSpacingY": 8,
+                    "fit": "original",
+                    "gutterColor": "#C5D3E0"
+                },
+                "version": 1
+            }
+        ],
+        "layouts": [],
+        "steps": {
+            "UOM_Selector": {
+                "datasets": [],
+                "dimensions": [],
+                "groups": [],
+                "isFacet": false,
+                "isGlobal": false,
+                "label": "UOM_Selector",
+                "numbers": [],
+                "selectMode": "singlerequired",
+                "start": {
+                    "display": [
+                        "KUSG"
+                    ]
+                },
+                "strings": [],
+                "type": "staticflex",
+                "useGlobal": false,
+                "values": [
+                    {
+                        "display": "KUSG",
+                        "value": 1
+                    },
+                    {
+                        "display": "MT",
+                        "value": 330.215
+                    },
+                    {
+                        "display": "CM",
+                        "value": 264.172
+                    },
+                    {
+                        "display": "LT",
+                        "value": 0.264
+                    }
+                ]
+            },
+            "Master_Data_Selector": {
+                "datasets": [],
+                "dimensions": [],
+                "groups": [],
+                "isFacet": false,
+                "isGlobal": false,
+                "label": "Master_Data_Selector",
+                "numbers": [],
+                "selectMode": "singlerequired",
+                "start": {
+                    "display": [
+                        "Forecasted Volume"
+                    ]
+                },
+                "strings": [],
+                "type": "staticflex",
+                "useGlobal": false,
+                "values": [
+                    {
+                        "display": "Forecasted Volume",
+                        "saql_step_value": "sum('Volume') * {{cell(UOM_Selector.selection, 0, \"value\").asObject()}}"
+                    },
+                    {
+                        "display": "Forecasted GP",
+                        "saql_step_value": "sum('Gross_Profit')",
+                        "value": 330.215
+                    },
+                    {
+                        "display": "Forecasted WC",
+                        "saql_step_value": "sum('WC')",
+                        "value": 264.172
+                    }
+                ]
+            },
+            "forecasted_gp_wc_step": {
+                "groups": [],
+                "isFacet": true,
+                "label": "forecasted_gp_wc_step",
+                "numbers": [],
+                "query": "q = load \"dataset_year_in_date_format\";\nq = group q by 'all';\nq = foreach q generate (sum('{{cell(Master_Data_Selector.selection, 0, \"value\").asString()}}')) as '{{cell(Master_Data_Selector.selection, 0, \"display\").asString()}} ('$')';\nq = limit q 2000;",
+                "selectMode": "single",
+                "strings": [],
+                "type": "saql",
+                "useGlobal": true
+            },
+            "volume_calculation": {
+                "groups": [],
+                "isFacet": true,
+                "label": "volume_calculation",
+                "numbers": [],
+                "query": "q = load \"dataset_year_in_date_format\";\nq = group q by 'all';\nq = foreach q generate (sum('Volume') * {{cell(UOM_Selector.selection, 0, \"value\").asString()}}) as 'Volume ({{column(UOM_Selector.selection, [\"display\"]).asObject()}});\nq = limit q 2000;",
+                "selectMode": "single",
+                "strings": [],
+                "type": "saql",
+                "useGlobal": true
+            },
+            "Volume_1": {
+                "groups": [],
+                "isFacet": true,
+                "numbers": [],
+                "query": "q = load \"dataset_year_in_date_format\";\nq = group q by 'all';\nq = foreach q generate {{cell(Master_Data_Selector.selection, 0, \"saql_step_value\").asObject()}} as 'Volume';\nq = limit q 2000;",
+                "strings": [],
+                "type": "saql",
+                "useGlobal": true,
+                "visualizationParameters": {
+                    "parameters": {
+                        "centerText": "",
+                        "centerValueType": "number",
+                        "legend": {
+                            "showHeader": true,
+                            "show": true,
+                            "customSize": "auto",
+                            "position": "right-top",
+                            "inside": false
+                        },
+                        "showMeasureTitle": true,
+                        "valueType": "compactNumber",
+                        "visualizationType": "pie",
+                        "theme": "wave",
+                        "title": {
+                            "label": "",
+                            "align": "center",
+                            "subtitleLabel": ""
+                        },
+                        "trellis": {
+                            "flipLabels": false,
+                            "showGridLines": true,
+                            "enable": false,
+                            "type": "x",
+                            "chartsPerLine": 4
+                        },
+                        "inner": 60
+                    },
+                    "type": "chart"
+                },
+                "selectMode": "single"
+            },
+            "table": {
+                "groups": [],
+                "isFacet": true,
+                "label": "table",
+                "numbers": [],
+                "query": "q = load \"dataset_year_in_date_format\";\n q = foreach q generate ('Volume' * {{cell(UOM_Selector.selection, 0, \"value\").asString()}}) as 'Volume ({{column(UOM_Selector.selection, [\"display\"]).asObject()}})', 'Country' as 'Country', 'Customer' as 'Customer', 'WC' as 'WC', 'Year_Year' as 'Year_Year';\nq = limit q 2000;",
+                "selectMode": "single",
+                "strings": [],
+                "type": "saql",
+                "useGlobal": true
+            }
+        },
+        "widgetStyle": {
+            "backgroundColor": "#FFFFFF",
+            "borderColor": "#E6ECF2",
+            "borderEdges": [],
+            "borderRadius": 0,
+            "borderWidth": 1
+        },
+        "widgets": {
+            "table_1": {
+                "parameters": {
+                    "customBulkActions": [],
+                    "mode": "fittocontainer",
+                    "step": "table"
+                },
+                "type": "table"
+            },
+            "listselector_2": {
+                "parameters": {
+                    "compact": false,
+                    "exploreLink": false,
+                    "instant": true,
+                    "step": "Master_Data_Selector",
+                    "title": "Master Data"
+                },
+                "type": "listselector"
+            },
+            "listselector_1": {
+                "parameters": {
+                    "compact": false,
+                    "exploreLink": false,
+                    "instant": true,
+                    "measureField": "value",
+                    "step": "UOM_Selector",
+                    "title": "Select Unit of Measure"
+                },
+                "type": "listselector"
+            },
+            "chart_1": {
+                "parameters": {
+                    "autoFitMode": "keepLabels",
+                    "centerText": "",
+                    "showValues": true,
+                    "bins": {
+                        "breakpoints": {
+                            "high": 100,
+                            "low": 0
+                        },
+                        "bands": {
+                            "high": {
+                                "color": "#008000",
+                                "label": ""
+                            },
+                            "low": {
+                                "color": "#B22222",
+                                "label": ""
+                            },
+                            "medium": {
+                                "color": "#ffa500",
+                                "label": ""
+                            }
+                        }
+                    },
+                    "legend": {
+                        "showHeader": true,
+                        "show": true,
+                        "customSize": "auto",
+                        "position": "right-top",
+                        "inside": false
+                    },
+                    "showMeasureTitle": true,
+                    "axisMode": "multi",
+                    "visualizationType": "pie",
+                    "exploreLink": true,
+                    "title": {
+                        "label": "",
+                        "align": "center",
+                        "subtitleLabel": ""
+                    },
+                    "binValues": false,
+                    "trellis": {
+                        "flipLabels": false,
+                        "showGridLines": true,
+                        "enable": false,
+                        "type": "x",
+                        "chartsPerLine": 4
+                    },
+                    "inner": 60,
+                    "centerValueType": "number",
+                    "measureAxis2": {
+                        "sqrtScale": false,
+                        "showTitle": true,
+                        "showAxis": true,
+                        "title": "",
+                        "customDomain": {
+                            "showDomain": false
+                        }
+                    },
+                    "measureAxis1": {
+                        "sqrtScale": false,
+                        "showTitle": true,
+                        "showAxis": true,
+                        "title": "",
+                        "customDomain": {
+                            "showDomain": false
+                        }
+                    },
+                    "valueType": "compactNumber",
+                    "theme": "wave",
+                    "step": "Volume_1",
+                    "dimensionAxis": {
+                        "showTitle": true,
+                        "customSize": "auto",
+                        "showAxis": true,
+                        "title": "",
+                        "icons": {
+                            "useIcons": false,
+                            "iconProps": {
+                                "fit": "cover",
+                                "column": "",
+                                "type": "round"
+                            }
+                        }
+                    }
+                },
+                "type": "chart"
+            }
+        }
+    },
+    "datasets": [
+        {
+            "id": "0Fb9E000000CaTmSAP",
+            "label": "dataset year in date format",
+            "name": "dataset_year_in_date_format",
+            "url": "/services/data/v40.0/wave/datasets/0Fb9E000000CaTmSAP"
+        }
+    ]
+}
