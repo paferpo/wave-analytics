@@ -1,0 +1,52 @@
+"listSplitGraph": {
+                "datasets": [],
+                "dimensions": [],
+                "groups": [],
+                "isFacet": false,
+                "label": "listSplitGraph",
+                "numbers": [],
+                "selectMode": "single",
+                "strings": [],
+                "type": "staticflex",
+                "useGlobal": false,
+                "values": [
+                    {
+                        "display": "Carrier",
+                        "value": "Carrier_Name"
+                    },
+                    {
+                        "display": "Contract",
+                        "value": "Tender_ID"
+                    },
+                    {
+                        "display": "Country",
+                        "value": "Country"
+                    },
+                    {
+                        "display": "Customer",
+                        "value": "Customer"
+                    }
+                ]
+            },
+            "listDataType": {
+                "groups": [],
+                "isFacet": true,
+                "label": "listDataType",
+                "numbers": [],
+                "query": "q = load \"dataset_2017_2019\";\nq = group q by {{coalesce(cell(listSplitGraph.selection, 0,\"value\"), \"Country\").asString()}};\nq = foreach q generate {{coalesce(cell(listSplitGraph.selection, 0, \"value\"), \"Country\").asString()}} as 'output' asc;\nq = limit q 2000;",
+                "selectMode": "multi",
+                "strings": [],
+                "type": "saql",
+                "useGlobal": true
+            }
+"totalsTable": {
+                "isFacet": false,
+                "label": "finalTotalsTable",
+                "numbers": [],
+                "query": "q = load \"2017_2019\";\nq = group q by {{coalesce(cell(listSplitGraph.selection, 0,\"value\"), \"all\").asString()}};\nq = filter q by '{{coalesce(cell(listSplitGraph.selection, 0,\"value\"), \"Country\").asString()}}' in {{coalesce(column(listDataType.selection, [\"output\"]), \"all\").asString()}};\nq = foreach q generate sum('Volume') as 'Forecasted Volume', sum('Tendered_Volume') as 'Contracted Volume', sum('Gross_Profit') as 'Forecasted GP', sum('Gross_Profit')/sum('Volume') as 'Forecasted UGP', sum('WC') as 'Forecasted WC', sum('Gross_Profit')/sum('WC') as 'Forecasted ROWC', sum('NetDiff_Volume')/sum('Volume') as 'Forecasted wa Diff';\nq = limit q 2000;",
+                "selectMode": "single",
+                "type": "saql",
+                "useGlobal": true,                
+            },
+            
+            
